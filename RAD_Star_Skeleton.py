@@ -27,7 +27,38 @@ import os
 rootDir = os.path.dirname(__file__) + '/dataset/train/' #<-- absolute dir the script is in
 i = 0
 
+numLines = 2000
 
+# Initializes d_arrays
+#d1 = np.zeros(numLines)
+#d2 = np.zeros(numLines)
+#d3 = np.zeros(numLines)
+#d4 = np.zeros(numLines)
+#d5 = np.zeros(numLines)
+d1 = []
+d2 = []
+d3 = []
+d4 = []
+d5 = []
+#
+#
+# theta1 is d1 --> d2
+# theta2 is d2 --> d3
+# theta3 is d3 --> d4
+# theta4 is d4 --> d5
+# theta5 is d5 --> d1
+# 
+# Initializes theta arrays
+theta1 = []
+theta2 = []
+theta3 = []
+theta4 = []
+theta5 = []
+#theta1 = np.zeros(numLines)
+#theta2 = np.zeros(numLines)
+#theta3 = np.zeros(numLines)
+#theta4 = np.zeros(numLines)
+#theta5 = np.zeros(numLines)
 
 # loops through each file in the /dataset/ directory, and reads the data from each line.
 
@@ -35,28 +66,8 @@ for subdir, dirs, files in os.walk(rootDir):
     for file in files:
         trainData = open(os.path.join(subdir, file), "r")
 
-        numLines = sum(1 for line in open(os.path.join(subdir, file)))
+        #numLines = sum(1 for line in open(os.path.join(subdir, file)))
         
-        # Initializes d_arrays
-        d1 = np.zeros(numLines)
-        d2 = np.zeros(numLines)
-        d3 = np.zeros(numLines)
-        d4 = np.zeros(numLines)
-        d5 = np.zeros(numLines)
-        #
-        #
-        # theta1 is d1 --> d2
-        # theta2 is d2 --> d3
-        # theta3 is d3 --> d4
-        # theta4 is d4 --> d5
-        # theta5 is d5 --> d1
-        # 
-        # Initializes theta arrays
-        theta1 = np.zeros(numLines)
-        theta2 = np.zeros(numLines)
-        theta3 = np.zeros(numLines)
-        theta4 = np.zeros(numLines)
-        theta5 = np.zeros(numLines)
         
         for newLine in trainData:
             data = newLine.split()
@@ -96,33 +107,30 @@ for subdir, dirs, files in os.walk(rootDir):
                 footRight_y = data[3]
                 footRight_z = data[4]
             
-            
-        # Calculates the d and theta values for each limb
-        # Reading clockwise:
-        # d1 is HipCenter --> head
-        # d2 is HipCenter --> leftHand
-        # d3 is HipCenter --> leftFoot
-        # d4 is HipCenter --> rightFoot
-        # d5 is HipCenter --> rightHand
-        #
+                # Calculates the d and theta values for each limb
+                # Reading clockwise:
+                # d1 is HipCenter --> head
+                # d2 is HipCenter --> leftHand
+                # d3 is HipCenter --> leftFoot
+                # d4 is HipCenter --> rightFoot
+                # d5 is HipCenter --> rightHand
+                #
+        
+                d1.append(np.sqrt((hipCenter_x-head_x)**2+(hipCenter_y-head_y)**2))
+                d2.append(np.sqrt((hipCenter_x-handLeft_x)**2+(hipCenter_y-handLeft_y)**2))
+                d3.append(np.sqrt((hipCenter_x-handRight_x)**2+(hipCenter_y-handRight_y)**2))
+                d4.append(np.sqrt((hipCenter_x-footLeft_x)**2+(hipCenter_y-footLeft_y)**2))
+                d5.append(np.sqrt((hipCenter_x-footRight_x)**2+(hipCenter_y-footRight_y)**2))
+                
+                theta1.append(np.arctan2([hipCenter_y,head_y],[hipCenter_x,head_x])[1])
+                theta2.append(np.arctan2([hipCenter_y,head_y],[hipCenter_x,head_x])[1])
+                theta3.append(np.arctan2([hipCenter_y,head_y],[hipCenter_x,head_x])[1])
+                theta4.append(np.arctan2([hipCenter_y,head_y],[hipCenter_x,head_x])[1])
+                theta5.append(np.arctan2([hipCenter_y,head_y],[hipCenter_x,head_x])[1])
         
         
-        
-        d1[i] = np.sqrt((hipCenter_x-head_x)**2+(hipCenter_y-head_y)**2)
-        d2[i] = np.sqrt((hipCenter_x-handLeft_x)**2+(hipCenter_y-handLeft_y)**2)
-        d3[i] = np.sqrt((hipCenter_x-handRight_x)**2+(hipCenter_y-handRight_y)**2)
-        d4[i] = np.sqrt((hipCenter_x-footLeft_x)**2+(hipCenter_y-footLeft_y)**2)
-        d5[i] = np.sqrt((hipCenter_x-footRight_x)**2+(hipCenter_y-footRight_y)**2)
-        
-        theta1[i] = np.arctan2([hipCenter_y,head_y],[hipCenter_x,head_x])[1]
-        theta2[i] = np.arctan2([hipCenter_y,head_y],[hipCenter_x,head_x])[1]
-        theta3[i] = np.arctan2([hipCenter_y,head_y],[hipCenter_x,head_x])[1]
-        theta4[i] = np.arctan2([hipCenter_y,head_y],[hipCenter_x,head_x])[1]
-        theta5[i] = np.arctan2([hipCenter_y,head_y],[hipCenter_x,head_x])[1]
-        
-        
-        i += 1
-    trainData.close()
+                i += 1
+        trainData.close()
         
 
         
