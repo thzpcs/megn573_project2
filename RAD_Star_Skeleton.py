@@ -22,14 +22,11 @@ needs to be converted into a single testing file rad d1.t
 
 import numpy as np
 import os
-import pandas as pd
-import matplotlib.pyplot as plt
-
 
 
 def RAD(filePath):
     
-    rootDir = os.path.dirname(__file__) + '/dataset' + filePath #<-- absolute dir the script is in
+    rootDir = os.path.dirname(__file__) + '/dataset/' + filePath #<-- absolute dir the script is in
     
     # Initializes d_arrays
     #
@@ -48,7 +45,7 @@ def RAD(filePath):
     theta5 = []
     
     # Starting index for arrays. Each index is a frame (ie d1[1] = d1 for frame 1)
-    i = 0
+    frame = 0
     
     # loops through each file in the /dataset/ directory, and reads the data from each line.
     
@@ -135,7 +132,7 @@ def RAD(filePath):
                     theta4.append(abs(alpha4-alpha5))
                     theta5.append(abs(alpha5-alpha1))
                     
-                    i += 1
+                    frame += 1
                     
             trainData.close()
             
@@ -175,24 +172,185 @@ def RAD(filePath):
             ## Creates the file for saving the histogram
             
         return(rad_d1);
-            
         
+
+### HOD representation
+def HJPD(filePath):
+    rootDir = os.path.dirname(__file__) + '/dataset/' + filePath
+    
+    # Starting index for arrays. Each index is a frame (ie d1[1] = d1 for frame 1)
+    frame = 0
+    deltaFrame = []
+    # loops through each file in the /dataset/ directory, and reads the data from each line.
+    
+    for subdir, dirs, files in os.walk(rootDir):
+        for file in files:
+            trainData = open(os.path.join(subdir, file), "r")       
+            
+            for newLine in trainData:
+                data = newLine.split()
+                data = [float(i) for i in data]
+            
+            # Checks the values of the first column in each line, and matches them 
+            # to the specific joints, with x, y, and z position 
+    
+                if data[1] == 1:
+                    hipCenter_x = data[2]
+                    hipCenter_y = data[3]
+                    hipCenter_z = data[4]
+                    
+                elif data[1] == 2:
+                    spine_x = data[2]
+                    spine_y = data[3]
+                    spine_z = data[4]
+                    
+                elif data[1] == 3:
+                    shoulderCenter_x = data[2]
+                    shoulderCenter_y = data[3]
+                    shoulderCenter_z = data[4]
+                    
+                elif data[1] == 4:
+                    head_x = data[2]
+                    head_y = data[3]
+                    head_z = data[4]
+                    
+                elif data[1] == 5:
+                    shoulderLeft_x = data[2]
+                    shoulderLeft_y = data[3]
+                    shoulderLeft_z = data[4]
+                
+                elif data[1] == 6:
+                    elbowLeft_x = data[2]
+                    elbowLeft_y = data[3]
+                    elbowLeft_z = data[4]
+                
+                elif data[1] == 7:
+                    wristLeft_x = data[2]
+                    wristLeft_y = data[3]
+                    wristLeft_z = data[4]
+                    
+                elif data[1] == 8:
+                    handLeft_x = data[2]
+                    handLeft_y = data[3]
+                    handLeft_z = data[4]
+                    
+                elif data[1] == 9:
+                    shoulderRight_x = data[2]
+                    shoulderRight_y = data[3]
+                    shoulderRight_z = data[4]
+                    
+                elif data[1] == 10:
+                    elbowRight_x = data[2]
+                    elbowRight_y = data[3]
+                    elbowRight_z = data[4]
+                
+                elif data[1] == 11:
+                    wristRight_x = data[2]
+                    wristRight_y = data[3]
+                    wristRight_z = data[4]
+                    
+                elif data[1] == 12:
+                    handRight_x = data[2]
+                    handRight_y = data[3]
+                    handRight_z = data[4]
+                    
+                elif data[1] == 13:
+                    hipLeft_x = data[2]
+                    hipLeft_y = data[3]
+                    hipLeft_z = data[4]
+                    
+                elif data[1] == 14:
+                    kneeLeft_x = data[2]
+                    kneeLeft_y = data[3]
+                    kneeLeft_z = data[4]
+                    
+                elif data[1] == 15:
+                    ankleLeft_x = data[2]
+                    ankleLeft_y = data[3]
+                    ankleLeft_z = data[4]
+                
+                elif data[1] == 16:
+                    footLeft_x = data[2]
+                    footLeft_y = data[3]
+                    footLeft_z = data[4]
+                    
+                elif data[1] == 17:
+                    hipRight_x = data[2]
+                    hipRight_y = data[3]
+                    hipRight_z = data[4]
+                    
+                elif data[1] == 18:
+                    kneeRight_x = data[2]
+                    kneeRight_y = data[3]
+                    kneeRight_z = data[4]
+                    
+                elif data[1] == 19:
+                    ankleRight_x = data[2]
+                    ankleRight_y = data[3]
+                    ankleRight_z = data[4]
+                
+                elif data[1] == 20:
+                    footRight_x = data[2]
+                    footRight_y = data[3]
+                    footRight_z = data[4]
+                
+                    # Stores all of the deltas at each frame
+                
+                    delta1 = (hipCenter_x - spine_x, hipCenter_y - spine_y, hipCenter_z - spine_z)
+                    delta2 = (hipCenter_x - shoulderCenter_x, hipCenter_y - shoulderCenter_y, hipCenter_z - shoulderCenter_z)
+                    delta3 = (hipCenter_x - head_x, hipCenter_y - head_y, hipCenter_z - head_z)
+                    delta4 = (hipCenter_x - shoulderLeft_x, hipCenter_y - shoulderLeft_y, hipCenter_z - shoulderLeft_z)
+                    delta5 = (hipCenter_x - elbowLeft_x, hipCenter_y - elbowLeft_y, hipCenter_z - elbowLeft_z)
+                    delta6 = (hipCenter_x - wristLeft_x, hipCenter_y - wristLeft_y, hipCenter_z - wristLeft_z)
+                    delta7 = (hipCenter_x - handLeft_x, hipCenter_y - handLeft_y, hipCenter_z - handLeft_z)
+                    delta8 = (hipCenter_x - shoulderRight_x, hipCenter_y - shoulderRight_y, hipCenter_z - shoulderRight_z)
+                    delta9 = (hipCenter_x - elbowRight_x, hipCenter_y - elbowRight_y, hipCenter_z - elbowRight_z)
+                    delta10 = (hipCenter_x - wristRight_x, hipCenter_y - wristRight_y, hipCenter_z - wristRight_z)
+                    delta11 = (hipCenter_x - handRight_x, hipCenter_y - handRight_y, hipCenter_z - handRight_z)
+                    delta12 = (hipCenter_x - hipLeft_x, hipCenter_y - hipLeft_y, hipCenter_z - hipLeft_z)
+                    delta13 = (hipCenter_x - kneeLeft_x, hipCenter_y - kneeLeft_y, hipCenter_z - kneeLeft_z)
+                    delta14 = (hipCenter_x - ankleLeft_x, hipCenter_y - ankleLeft_y, hipCenter_z - ankleLeft_z)
+                    delta15 = (hipCenter_x - footLeft_x, hipCenter_y - footLeft_y, hipCenter_z - footLeft_z)
+                    delta16 = (hipCenter_x - hipRight_x, hipCenter_y - hipRight_y, hipCenter_z - hipRight_z)
+                    delta17 = (hipCenter_x - kneeRight_x, hipCenter_y - kneeRight_y, hipCenter_z - kneeRight_z)
+                    delta18 = (hipCenter_x - ankleRight_x, hipCenter_y - ankleRight_y, hipCenter_z - ankleRight_z)
+                    delta19 = (hipCenter_x - footRight_x, hipCenter_y - footRight_y, hipCenter_z - footRight_z)
+                    
+                    
+                    # Stores the delta at each frame in a large list
+                    
+                    deltaFrame.append((delta1,delta2,delta3,delta4,delta5,delta6,delta7,delta8,\
+                              delta9,delta10,delta11,delta12,delta13,delta14,delta15,delta16,delta17,delta18,delta19))
+        
+        trainData.close()
+        
+        ## Histogram for HJPD
+        
+        dRange = (0, 1)
+        hjpd_d1 = np.histogram(deltaFrame, bins='auto', range= dRange, normed = 'True')
+        return(hjpd_d1[0]);
         
 ### Function calls for test and training functions
             
-# Training function
+# RAD Training function
 
-radTrain = RAD('/train/')
+radTrain = RAD('train')
 np.savetxt("rad_d1", radTrain, fmt='%f')
 
-# Testing function
+## RAD Testing function
 
-radTest = RAD('/test/')
-np.savetxt("rad_d1.t", radTest, fmt='%1.4f')   
-            
+radTest = RAD('test')
+np.savetxt("rad_d1.t", radTest, fmt='%1.4f')
 
-            
-    
+
+### HJPD test and train functions
+hjpdTrain = HJPD('train')
+np.savetxt("hjpd_d1", hjpdTrain, fmt='%f')
+
+hjpdTest = HJPD('test')
+np.savetxt("hjpd_d1.t", hjpdTest, fmt='%f')
+
+
         
 
         
