@@ -46,7 +46,7 @@ def RAD(filePath):
     
     # Starting index for arrays. Each index is a frame (ie d1[1] = d1 for frame 1)
     frame = 0
-    
+    rad_d1 = [0]*250
     # loops through each file in the /dataset/ directory, and reads the data from each line.
     
     for subdir, dirs, files in os.walk(rootDir):
@@ -134,43 +134,43 @@ def RAD(filePath):
                     
                     frame += 1
                     
+                    
+                    ## Histogram Calculations
+                    dRange = (0, 1)
+                    thetaRange = (0.0,np.pi)
+                    
+                    # Calculates the normalized d histograms, number of bins is determined 
+                    # by the 'auto' flag, which is the maximum of the ‘sturges’ and ‘fd’ estimators. 
+                    # See the Numpy documentation at scipy.org for more information
+                    
+                    histD1 = np.histogram(d1, bins=35, range= dRange, normed = 'True')
+                    
+                    # Uses the largest number of bins (d1), which determines the bins for all other dHist
+                    nBins = len(histD1[0])
+                    
+                    histD2 = np.histogram(d2, bins=nBins, range= dRange, normed = 'True')
+                    histD3 = np.histogram(d3, bins=nBins, range= dRange, normed = 'True')
+                    histD4 = np.histogram(d4, bins=nBins, range= dRange, normed = 'True')
+                    histD5 = np.histogram(d5, bins=nBins, range= dRange, normed = 'True')
+                            
+                    histTheta1 = np.histogram(theta1, bins=15, range= thetaRange, normed = 'True')
+                    
+                    mBins = len(histTheta1[0])
+                    
+                    histTheta2 = np.histogram(theta2, bins=mBins, range= thetaRange, normed = 'True')
+                    histTheta3 = np.histogram(theta3, bins=mBins, range= thetaRange, normed = 'True')
+                    histTheta4 = np.histogram(theta4, bins=mBins, range= thetaRange, normed = 'True')
+                    histTheta5 = np.histogram(theta5, bins=mBins, range= thetaRange, normed = 'True')
+                    
+                    instance_d1 = np.hstack([histD1[0], histD2[0], histD3[0], histD4[0], histD5[0],  \
+                    histTheta1[0], histTheta2[0], histTheta3[0], histTheta4[0], histTheta5[0]])
+    
+                    
+            rad_d1 = np.vstack([rad_d1,instance_d1])
+            print(str(trainData))
             trainData.close()
             
-            ## Histogram Calculations
-            
-    
-            dRange = (0, 1)
-            thetaRange = (0.0,np.pi)
-            
-            # Calculates the normalized d histograms, number of bins is determined 
-            # by the 'auto' flag, which is the maximum of the ‘sturges’ and ‘fd’ estimators. 
-            # See the Numpy documentation at scipy.org for more information
-            
-            histD1 = np.histogram(d1, bins='auto', range= dRange, normed = 'True')
-            
-            # Uses the largest number of bins (d1), which determines the bins for all other dHist
-            nBins = len(histD1[0])
-            
-            histD2 = np.histogram(d2, bins=nBins, range= dRange, normed = 'True')
-            histD3 = np.histogram(d3, bins=nBins, range= dRange, normed = 'True')
-            histD4 = np.histogram(d4, bins=nBins, range= dRange, normed = 'True')
-            histD5 = np.histogram(d5, bins=nBins, range= dRange, normed = 'True')
-                    
-            histTheta1 = np.histogram(theta1, bins='auto', range= thetaRange, normed = 'True')
-            
-            mBins = len(histTheta1[0])
-            
-            histTheta2 = np.histogram(theta2, bins=mBins, range= thetaRange, normed = 'True')
-            histTheta3 = np.histogram(theta3, bins=mBins, range= thetaRange, normed = 'True')
-            histTheta4 = np.histogram(theta4, bins=mBins, range= thetaRange, normed = 'True')
-            histTheta5 = np.histogram(theta5, bins=mBins, range= thetaRange, normed = 'True')
-            
-            rad_d1 = np.hstack([histD1[0], histD2[0], histD3[0], histD4[0], histD5[0],  \
-            histTheta1[0], histTheta2[0], histTheta3[0], histTheta4[0], histTheta5[0]])
-        
-            
             ## Creates the file for saving the histogram
-            
         return(rad_d1);
         
 
@@ -179,8 +179,10 @@ def HJPD(filePath):
     rootDir = os.path.dirname(__file__) + '/dataset/' + filePath
     
     # Starting index for arrays. Each index is a frame (ie d1[1] = d1 for frame 1)
-    frame = 0
-    deltaFrame = []
+
+    deltaFrame=[]
+    hjpd_d1 = [0]*100
+    dRange = (0, 1)
     # loops through each file in the /dataset/ directory, and reads the data from each line.
     
     for subdir, dirs, files in os.walk(rootDir):
@@ -321,14 +323,20 @@ def HJPD(filePath):
                     
                     deltaFrame.append((delta1,delta2,delta3,delta4,delta5,delta6,delta7,delta8,\
                               delta9,delta10,delta11,delta12,delta13,delta14,delta15,delta16,delta17,delta18,delta19))
-        
+                    
+                    instance_hjpd_d1 = np.histogram(deltaFrame, bins=100, range= dRange, normed = 'True')
+                    
+                    hjpd_d1 = np.vstack([hjpd_d1,instance_hjpd_d1[0]])
+                        
+                        
         trainData.close()
         
         ## Histogram for HJPD
         
-        dRange = (0, 1)
-        hjpd_d1 = np.histogram(deltaFrame, bins='auto', range= dRange, normed = 'True')
-        return(hjpd_d1[0]);
+        return(hjpd_d1);
+        
+def convertToSVM(filePath):
+    
         
 ### Function calls for test and training functions
             
@@ -342,13 +350,13 @@ np.savetxt("rad_d1", radTrain, fmt='%f')
 radTest = RAD('test')
 np.savetxt("rad_d1.t", radTest, fmt='%1.4f')
 
-
-### HJPD test and train functions
-hjpdTrain = HJPD('train')
-np.savetxt("hjpd_d1", hjpdTrain, fmt='%f')
-
-hjpdTest = HJPD('test')
-np.savetxt("hjpd_d1.t", hjpdTest, fmt='%f')
+#
+#### HJPD test and train functions
+#hjpdTrain = HJPD('train')
+#np.savetxt("hjpd_d1", hjpdTrain, fmt='%f')
+#
+#hjpdTest = HJPD('test')
+#np.savetxt("hjpd_d1.t", hjpdTest, fmt='%f')
 
 
         
