@@ -22,9 +22,9 @@ class GridOption:
 			self.gnuplot_pathname = '/usr/bin/gnuplot'
 		else:
 			# example for windows
-			#self.svmtrain_pathname = os.path.join(dirname, r'..\windows\svm-train.exe')
-			self.svmtrain_pathname = r'C:\Program Files\libsvm\windows\svm-train.exe'
-			self.gnuplot_pathname = r'C:\Program Files\gnuplot\bin\gnuplot.exe'
+			self.svmtrain_pathname = os.path.join(dirname, r'..\windows\svm-train.exe')
+			# svmtrain_pathname = r'c:\Program Files\libsvm\windows\svm-train.exe'
+			self.gnuplot_pathname = r'c:\tmp\gnuplot\binary\pgnuplot.exe'
 		self.fold = 5
 		self.c_begin, self.c_end, self.c_step = -5,  15,  2
 		self.g_begin, self.g_end, self.g_step =  3, -15, -2

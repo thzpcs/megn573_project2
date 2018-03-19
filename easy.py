@@ -19,9 +19,9 @@ if not is_win32:
 	gnuplot_exe = "/usr/bin/gnuplot"
 else:
         # example for windows
-	svmscale_exe = r"C:\Users\Skyler\Google Drive\School Documents\2017-2018\Human Centered Robotics - MEGN 573\Project 2\libsvm-3.22\windows\svm-scale.exe"
-	svmtrain_exe = r"C:\Users\Skyler\Google Drive\School Documents\2017-2018\Human Centered Robotics - MEGN 573\Project 2\libsvm-3.22\windows\svm-train.exe"
-	svmpredict_exe = r"C:\Users\Skyler\Google Drive\School Documents\2017-2018\Human Centered Robotics - MEGN 573\Project 2\libsvm-3.22\windows\svm-predict.exe"
+	svmscale_exe = r"..\windows\svm-scale.exe"
+	svmtrain_exe = r"..\windows\svm-train.exe"
+	svmpredict_exe = r"..\windows\svm-predict.exe"
 	gnuplot_exe = r"C:\Program Files\gnuplot\bin\gnuplot.exe"
 	grid_py = r".\grid.py"
 

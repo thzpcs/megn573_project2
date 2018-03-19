@@ -167,7 +167,7 @@ def RAD(filePath):
     
                     
             rad_d1 = np.vstack([rad_d1,instance_d1])
-            print(str(trainData))
+            #print(str(trainData))
             trainData.close()
             
             ## Creates the file for saving the histogram
@@ -334,22 +334,36 @@ def HJPD(filePath):
         
         return(hjpd_d1);
         
-def convertToSVM(filePath):
-        rootDir = os.path.dirname(__file__)
-        dataFile = open(os.path.join(rootDir, filePath), "r")
-        dataLine = ''
-        svmLine = '0    '
+def convertToSVM(convertFile, filePath):
+    
+        convertRootDir = os.path.dirname(__file__)  
+        rootDir = os.path.dirname(__file__) + '/dataset/' + filePath
+        
+        dataFile = open(os.path.join(convertRootDir, convertFile), "r")
+
+        act = -2
         label = 1
+        activity = ();
+        
+        for subdir, dirs, files in os.walk(rootDir):
+            for file in files:
+                #fileName = open(os.path.join(subdir, file), "r")
+                actNum = (str(file[1:3]),)
+                activity = activity + actNum
+                label += 1
+        svmLine = str(activity[0]) + '   '
+        
         for newLine in dataFile:
             
-
             data = newLine.split()
             data = [float(i) for i in data]
-            
+
+            act += 1
             for index in range(len(data)):
+                
                 svmLine = svmLine + str(index) + ':' + str(data[index]) + ' '
-            svmLine = svmLine + str(label) + '   ' +  '\n' +  str(label) + '    '
-            label += 1
+            svmLine = svmLine + '   ' +  '\n' +  str(activity[act]) + '    '
+        
         return(svmLine);
     
         
@@ -374,30 +388,31 @@ hjpdTest = HJPD('test')
 np.savetxt("hjpd_d1.t", hjpdTest, fmt='%f')
 
 ###
-svmRADTrain = convertToSVM('rad_d1')
 
-svmRADFileTrain = open('svm_rad_d1', 'w')
-svmRADFileTrain.write(svmRADTrain)
-svmRADFileTrain.close()
-
-###
-
-svmRADTest = convertToSVM('rad_d1.t')
+svmRADTest = convertToSVM('rad_d1.t','test')
 
 svmRADFileTest = open('svm_rad_d1.t', 'w')
 svmRADFileTest.write(svmRADTest)
 svmRADFileTest.close()
 
 ###
+svmRADTrain = convertToSVM('rad_d1', 'train')
 
-svmHJPDtest = convertToSVM('HJPD_d1')
+svmRADFileTrain = open('svm_rad_d1', 'w')
+svmRADFileTrain.write(svmRADTrain)
+svmRADFileTrain.close()
+#
+
+###
+
+svmHJPDtest = convertToSVM('HJPD_d1.t', 'test')
 
 svmHJPDFileTest = open('svm_HJPD_d1.t', 'w')
 svmHJPDFileTest.write(svmHJPDtest)
 svmHJPDFileTest.close()
 
 ###
-svmHJPDtrain = convertToSVM('HJPD_d1')
+svmHJPDtrain = convertToSVM('HJPD_d1', 'train')
 
 svmHJPDFileTrain = open('svm_HJPD_d1', 'w')
 svmHJPDFileTrain.write(svmHJPDtrain)
